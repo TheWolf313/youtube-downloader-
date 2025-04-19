@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -10,144 +11,38 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-import { toast } from "sonner";
-import { Youtube, Download, FolderOpen, CheckCircle, PlaySquare, ListVideo } from "lucide-react";
+import { Download, FolderOpen } from 'lucide-react';
+import type { DownloadHistoryItem } from './DownloadForm';
+import { useDownload } from '../hooks/useDownload';
+import UrlTypeIndicator from './UrlTypeIndicator';
 
 interface DownloadFormProps {
   onAddToHistory: (download: DownloadHistoryItem) => void;
 }
 
-export interface DownloadHistoryItem {
-  id: string;
-  url: string;
-  title: string;
-  quality: string;
-  location: string;
-  timestamp: Date;
-  status: 'completed' | 'failed' | 'processing';
-  thumbnailUrl?: string;
-  type: 'video' | 'short' | 'playlist';
-}
-
 const DownloadForm: React.FC<DownloadFormProps> = ({ onAddToHistory }) => {
-  const [url, setUrl] = useState('');
-  const [location, setLocation] = useState('/downloads');
-  const [quality, setQuality] = useState('highest');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isValid, setIsValid] = useState(false);
-  const [urlType, setUrlType] = useState<'video' | 'short' | 'playlist' | null>(null);
-
-  const validateYoutubeUrl = (input: string) => {
-    const videoRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)(\S*)?$/;
-    const shortRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/shorts\/|youtu\.be\/)([\w-]+)(\S*)?$/;
-    const playlistRegex = /^(https?:\/\/)?(www\.)?youtube\.com\/playlist\?list=([\w-]+)(\S*)?$/;
-
-    if (videoRegex.test(input)) {
-      setUrlType('video');
-      return true;
-    } else if (shortRegex.test(input)) {
-      setUrlType('short');
-      return true;
-    } else if (playlistRegex.test(input)) {
-      setUrlType('playlist');
-      return true;
-    }
-    
-    setUrlType(null);
-    return false;
-  };
-
-  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value;
-    setUrl(input);
-    setIsValid(validateYoutubeUrl(input));
-  };
-
-  const getUrlTypeIcon = () => {
-    switch (urlType) {
-      case 'video':
-        return <Youtube className="h-5 w-5 text-youtube" />;
-      case 'short':
-        return <PlaySquare className="h-5 w-5 text-youtube" />;
-      case 'playlist':
-        return <ListVideo className="h-5 w-5 text-youtube" />;
-      default:
-        return <Youtube className="h-5 w-5 text-muted-foreground" />;
-    }
-  };
-
-  const handleLocationSelect = () => {
-    const locations = [
-      '/downloads',
-      '/videos',
-      '/my-videos',
-      '/youtube-downloads'
-    ];
-    const randomLocation = locations[Math.floor(Math.random() * locations.length)];
-    setLocation(randomLocation);
-    toast.success(`Location set to ${randomLocation}`);
-  };
-
-  const generateRandomTitle = () => {
-    const titles = [
-      'How to Build a Website in 2025',
-      'Amazing Travel Destinations You Must Visit',
-      'Learning React in 30 Days',
-      'Top 10 Programming Languages in 2025',
-      'The Ultimate Cooking Guide'
-    ];
-    return titles[Math.floor(Math.random() * titles.length)];
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!isValid) {
-      toast.error('Please enter a valid YouTube URL');
-      return;
-    }
-    
-    setIsLoading(true);
-    
-    try {
-      const processingTime = urlType === 'video' ? 3000 : 2000;
-      await new Promise(resolve => setTimeout(resolve, processingTime));
-      
-      const newDownload: DownloadHistoryItem = {
-        id: Math.random().toString(36).substring(2, 9),
-        url,
-        title: generateRandomTitle(),
-        quality,
-        location,
-        timestamp: new Date(),
-        status: 'completed',
-        thumbnailUrl: `https://picsum.photos/seed/${Math.random()}/640/360`,
-        type: urlType || 'video'
-      };
-      
-      onAddToHistory(newDownload);
-      toast.success(`${urlType === 'playlist' ? 'Playlist' : 'Video'} downloaded successfully!`);
-      toast.info('Longer videos may take more time to process');
-      setUrl('');
-      setIsValid(false);
-      setUrlType(null);
-    } catch (error) {
-      toast.error(`Failed to download ${urlType === 'playlist' ? 'playlist' : 'video'}`);
-      console.error('Download error:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const {
+    url,
+    location,
+    quality,
+    isLoading,
+    isValid,
+    urlType,
+    handleUrlChange,
+    handleLocationSelect,
+    handleDownload,
+    setQuality
+  } = useDownload(onAddToHistory);
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={(e) => { e.preventDefault(); handleDownload(); }} className="space-y-6">
       <div className="space-y-2">
         <Label htmlFor="youtube-url" className="text-sm font-medium">
           YouTube URL
         </Label>
         <div className="input-field-container flex overflow-hidden rounded-lg">
           <div className="bg-primary/10 p-3 flex items-center">
-            {getUrlTypeIcon()}
+            <UrlTypeIndicator urlType={urlType} />
           </div>
           <Input
             id="youtube-url"
@@ -156,7 +51,7 @@ const DownloadForm: React.FC<DownloadFormProps> = ({ onAddToHistory }) => {
               : "https://www.youtube.com/watch?v=... or shorts/..."
             }
             value={url}
-            onChange={handleUrlChange}
+            onChange={(e) => handleUrlChange(e.target.value)}
             className="flex-1 border-0 focus-visible:ring-0"
           />
         </div>
@@ -235,3 +130,4 @@ const DownloadForm: React.FC<DownloadFormProps> = ({ onAddToHistory }) => {
 };
 
 export default DownloadForm;
+
