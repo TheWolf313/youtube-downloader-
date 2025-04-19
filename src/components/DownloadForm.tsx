@@ -38,9 +38,9 @@ const DownloadForm: React.FC<DownloadFormProps> = ({ onAddToHistory }) => {
   const [urlType, setUrlType] = useState<'video' | 'short' | 'playlist' | null>(null);
 
   const validateYoutubeUrl = (input: string) => {
-    const videoRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=)[\w-]+(&\S*)?$/;
-    const shortRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/shorts\/|youtu\.be\/)[\w-]+(\?\S*)?$/;
-    const playlistRegex = /^(https?:\/\/)?(www\.)?youtube\.com\/playlist\?list=[\w-]+(&\S*)?$/;
+    const videoRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)(\S*)?$/;
+    const shortRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/shorts\/|youtu\.be\/)([\w-]+)(\S*)?$/;
+    const playlistRegex = /^(https?:\/\/)?(www\.)?youtube\.com\/playlist\?list=([\w-]+)(\S*)?$/;
 
     if (videoRegex.test(input)) {
       setUrlType('video');
@@ -110,7 +110,8 @@ const DownloadForm: React.FC<DownloadFormProps> = ({ onAddToHistory }) => {
     setIsLoading(true);
     
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const processingTime = urlType === 'video' ? 3000 : 2000;
+      await new Promise(resolve => setTimeout(resolve, processingTime));
       
       const newDownload: DownloadHistoryItem = {
         id: Math.random().toString(36).substring(2, 9),
@@ -126,6 +127,7 @@ const DownloadForm: React.FC<DownloadFormProps> = ({ onAddToHistory }) => {
       
       onAddToHistory(newDownload);
       toast.success(`${urlType === 'playlist' ? 'Playlist' : 'Video'} downloaded successfully!`);
+      toast.info('Longer videos may take more time to process');
       setUrl('');
       setIsValid(false);
       setUrlType(null);
