@@ -61,10 +61,6 @@ const DownloadHistory: React.FC<DownloadHistoryProps> = ({ items }) => {
                     <Separator orientation="vertical" className="mx-2 h-4" />
                     <Badge variant="outline">{item.quality}</Badge>
                   </div>
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <Folder className="h-4 w-4 mr-1" />
-                    <span className="truncate">{item.location}</span>
-                  </div>
                 </div>
               </CardContent>
             </div>

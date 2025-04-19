@@ -16,7 +16,6 @@ const generateRandomTitle = () => {
 
 export const useDownload = (onAddToHistory: (download: DownloadHistoryItem) => void) => {
   const [url, setUrl] = useState('');
-  const [location, setLocation] = useState('/downloads');
   const [quality, setQuality] = useState('highest');
   const [isLoading, setIsLoading] = useState(false);
   const [isValid, setIsValid] = useState(false);
@@ -27,13 +26,6 @@ export const useDownload = (onAddToHistory: (download: DownloadHistoryItem) => v
     const { isValid: valid, type } = validateYoutubeUrl(input);
     setIsValid(valid);
     setUrlType(type);
-  };
-
-  const handleLocationSelect = () => {
-    const locations = ['/downloads', '/videos', '/my-videos', '/youtube-downloads'];
-    const randomLocation = locations[Math.floor(Math.random() * locations.length)];
-    setLocation(randomLocation);
-    toast.success(`Location set to ${randomLocation}`);
   };
 
   const handleDownload = async () => {
@@ -53,7 +45,6 @@ export const useDownload = (onAddToHistory: (download: DownloadHistoryItem) => v
         url,
         title: generateRandomTitle(),
         quality,
-        location,
         timestamp: new Date(),
         status: 'completed',
         thumbnailUrl: `https://picsum.photos/seed/${Math.random()}/640/360`,
@@ -62,7 +53,6 @@ export const useDownload = (onAddToHistory: (download: DownloadHistoryItem) => v
       
       onAddToHistory(newDownload);
       toast.success(`${urlType === 'playlist' ? 'Playlist' : 'Video'} downloaded successfully!`);
-      toast.info('Longer videos may take more time to process');
       setUrl('');
       setIsValid(false);
       setUrlType(null);
@@ -76,13 +66,11 @@ export const useDownload = (onAddToHistory: (download: DownloadHistoryItem) => v
 
   return {
     url,
-    location,
     quality,
     isLoading,
     isValid,
     urlType,
     handleUrlChange,
-    handleLocationSelect,
     handleDownload,
     setQuality
   };

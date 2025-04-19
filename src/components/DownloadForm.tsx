@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -10,7 +11,7 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-import { Download, FolderOpen } from 'lucide-react';
+import { Download } from 'lucide-react';
 import type { DownloadHistoryItem } from '../types/download';
 import { useDownload } from '../hooks/useDownload';
 import UrlTypeIndicator from './UrlTypeIndicator';
@@ -22,13 +23,11 @@ interface DownloadFormProps {
 const DownloadForm: React.FC<DownloadFormProps> = ({ onAddToHistory }) => {
   const {
     url,
-    location,
     quality,
     isLoading,
     isValid,
     urlType,
     handleUrlChange,
-    handleLocationSelect,
     handleDownload,
     setQuality
   } = useDownload(onAddToHistory);
@@ -61,49 +60,24 @@ const DownloadForm: React.FC<DownloadFormProps> = ({ onAddToHistory }) => {
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="download-location" className="text-sm font-medium">
-            Download Location
-          </Label>
-          <div className="input-field-container flex overflow-hidden rounded-lg">
-            <Input
-              id="download-location"
-              readOnly
-              value={location}
-              className="flex-1 border-0 focus-visible:ring-0"
-            />
-            <Button
-              type="button"
-              variant="outline"
-              className="border-0"
-              onClick={handleLocationSelect}
-            >
-              <FolderOpen className="h-4 w-4 mr-2" />
-              Browse
-            </Button>
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="video-quality" className="text-sm font-medium">
-            Video Quality
-          </Label>
-          <Select value={quality} onValueChange={setQuality}>
-            <SelectTrigger id="video-quality">
-              <SelectValue placeholder="Select quality" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="highest">Highest (1080p+)</SelectItem>
-                <SelectItem value="high">High (720p)</SelectItem>
-                <SelectItem value="medium">Medium (480p)</SelectItem>
-                <SelectItem value="low">Low (360p)</SelectItem>
-                <SelectItem value="audio">Audio Only</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
+      <div className="space-y-2">
+        <Label htmlFor="video-quality" className="text-sm font-medium">
+          Video Quality
+        </Label>
+        <Select value={quality} onValueChange={setQuality}>
+          <SelectTrigger id="video-quality">
+            <SelectValue placeholder="Select quality" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="highest">Highest (1080p+)</SelectItem>
+              <SelectItem value="high">High (720p)</SelectItem>
+              <SelectItem value="medium">Medium (480p)</SelectItem>
+              <SelectItem value="low">Low (360p)</SelectItem>
+              <SelectItem value="audio">Audio Only</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
 
       <Button 
