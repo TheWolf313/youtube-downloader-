@@ -1,8 +1,8 @@
-
 import React, { useState } from 'react';
 import Header from '@/components/Header';
-import DownloadForm, { DownloadHistoryItem } from '@/components/DownloadForm';
+import DownloadForm from '@/components/DownloadForm';
 import DownloadHistory from '@/components/DownloadHistory';
+import type { DownloadHistoryItem } from '@/types/download';
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Download, History } from 'lucide-react';

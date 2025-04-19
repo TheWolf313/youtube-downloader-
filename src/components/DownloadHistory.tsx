@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Clock, Folder, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
-import { type DownloadHistoryItem } from './DownloadForm';
+import type { DownloadHistoryItem } from '../types/download';
 
 interface DownloadHistoryProps {
   items: DownloadHistoryItem[];

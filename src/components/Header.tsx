@@ -11,11 +11,11 @@ const Header: React.FC = () => {
             <Download className="h-6 w-6 text-white" />
           </div>
           <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-brand">
-            Vid Grabber Supreme
+            YouTube Downloader
           </h1>
         </div>
         <p className="text-center text-muted-foreground mt-2">
-          Download YouTube videos for offline viewing
+          Download YouTube videos and playlists for offline viewing
         </p>
       </div>
     </header>

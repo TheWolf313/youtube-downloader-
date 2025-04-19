@@ -1,8 +1,7 @@
-
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { validateYoutubeUrl } from '../utils/youtubeValidator';
-import type { DownloadHistoryItem } from '../components/DownloadForm';
+import type { DownloadHistoryItem } from '../types/download';
 
 const generateRandomTitle = () => {
   const titles = [
@@ -88,4 +87,3 @@ export const useDownload = (onAddToHistory: (download: DownloadHistoryItem) => v
     setQuality
   };
 };
-

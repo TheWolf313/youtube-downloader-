@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -12,7 +11,7 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { Download, FolderOpen } from 'lucide-react';
-import type { DownloadHistoryItem } from './DownloadForm';
+import type { DownloadHistoryItem } from '../types/download';
 import { useDownload } from '../hooks/useDownload';
 import UrlTypeIndicator from './UrlTypeIndicator';
 
@@ -130,4 +129,3 @@ const DownloadForm: React.FC<DownloadFormProps> = ({ onAddToHistory }) => {
 };
 
 export default DownloadForm;
-
